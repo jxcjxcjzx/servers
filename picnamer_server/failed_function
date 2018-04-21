@@ -1,0 +1,33 @@
+// here we store some tryings we failed
+// in history, and maybe, i said maybe we have
+// a chance to use it later on
+
+// here we have met with some problem, try json way.
+// we met with some problem here , so quit this way, really sucks
+function OnePicPlease(picdir)
+{
+
+child_process.exec(util.format('echo { >  jsonforpic.json'));
+child_process.exec(util.format('echo \\"name\\":\\"picnamersetting\\", >>  jsonforpic.json'));
+child_process.exec(util.format('echo \\"picdir\\":\\"./pic\\", >>  jsonforpic.json'));
+child_process.exec(util.format('echo -n \\"picname\\":\\" >> jsonforpic.json && ls -t pic | head -n 1 | tr -d \\"\n\\" >> jsonforpic.json && echo \\" >> jsonforpic.json && echo } >> jsonforpic.json'));
+
+// we change one way to get the pic name
+var tmpname = "image1.png";
+fs.readFile('./jsonforpic.json',function(err,data)
+{
+if(err) throw err;
+
+var jsonObj = JSON.parse(data);
+// cause we only have one object, here eliminate the for loop
+tmpname = jsonObj["picname"];
+console.log(tmpname);
+
+}
+
+);
+
+
+return tmpname;
+
+}

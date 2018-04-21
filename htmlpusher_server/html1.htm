@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="x-ua-compatible" content="ie=7" />
+
+<title>14.1.3  磁场传感器Magnetic Field - 51CTO.COM</title>
+<meta name="description" content="《Android核心技术与实例详解》第14章传感器应用的开发，本章将详细介绍各种传感器的原理及使用方法，并通过一个水平仪的开发向读者介绍传感器应用的开发方法，以及如何在模拟器中模拟各种传感器。本节为大家介绍磁场传感器Magnetic Field。"/>
+<meta name="keywords" content="Android,Android核心技术与实例详解"/>
+<base target="_blank" />
+<link href="http://images.51cto.com/images/art1105/css/grid.css" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="http://images.51cto.com/images/art/css/art_master_top.css" />
+<link href="http://book.51cto.com/images/bookspec/css/css3.css" rel="stylesheet" type="text/css" />
+<script language="javaScript" src="http://www.51cto.com/php/base_art.js"></SCRIPT>
+<script src="http://www.51cto.com/images/homepage/index_1_down.js"></script>
+<style type="text/css">
+.bds_tools a{ padding:0; margin:0;}
+</style>
+</head>
+<body >
+<!-- 导航 开始-->
+<div id="home_top">    <div class="top_nav">        <div class="left" style="width:400px"><div class="logo_51cto" title="51CTO.COM - 技术成就梦想 -  中国领先的IT技术网站"></div><a href="http://www.51cto.com/">首页</a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif" style="padding-top: 2px;"><a onmouseover="show(1,this);" onmouseout="popupClose();" href="http://www.51cto.com/col/35/" target="_blank">技术频道<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif"><a onmouseover="show(2,this);" onmouseout="popupClose();" href="http://www.51cto.com" target="_blank">51CTO旗下网站<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_bg_xian.gif"><a href="http://www.51cto.com/about/map.htm" target="_blank">地图</a> <a href="http://www.51cto.com/about/rss.html" target="_blank"><img src="http://images.51cto.com/files/uploadimg/20110922/143749870.gif" style="vertical-align:middle; margin-bottom: 5px; margin-left:5px;"></a>       </div>        <div class="right">            <div class="more"><img width="27" height="16" align="absmiddle" src="http://home.51cto.com/public/themes/blue/images/top_shequ.gif">社区：<a href="http://edu.51cto.com/" target="_blank" style="color:#CC0000">学院</a><a href="http://down.51cto.com" target="_blank">下载</a><a href="http://bbs.51cto.com" target="_blank">论坛</a><a href="http://blog.51cto.com" target="_blank">博客</a><a onmouseover="show(3,this)" onmouseout="popupClose()" href="javascript:viod(0);">更多<img align="absmiddle" src="http://images.51cto.com/images/art/top_images/nav_ico1.gif" style="padding-left: 4px;"></a>            </div>            <span id="login_status"><div class="login" id="login_status"></div>    </span>                </div>    </div></div>
+<div class="subMenu1" id="s1" onmouseover="popupNoClose();" onmouseout="popupClose();">
+<ul>
+<li><a href="http://network.51cto.com" target="_blank">网络</a></li>
+<li><a href="http://netsecurity.51cto.com" target="_blank">安全</a></li>
+<li><a href="http://developer.51cto.com" target="_blank">开发</a></li>
+<li><a href="http://database.51cto.com" target="_blank">数据库</a></li>
+<li><a href="http://server.51cto.com" target="_blank">服务器</a></li>
+<li><a href="http://os.51cto.com" target="_blank">系统</a></li>
+<li><a href="http://virtual.51cto.com" target="_blank">虚拟化</a></li>
+<li><a href="http://cloud.51cto.com" target="_blank">云计算</a></li>
+<li><a href="http://developer.51cto.com/embed/" target="_blank">嵌入式</a></li>
+<li><a href="http://mobile.51cto.com/" target="_blank">移动开发</a></li>
+</ul>
+</div> 
+<div class="subMenu2" id="s2" onmouseover="popupNoClose()" onmouseout="popupClose()">
+<ul>
+<li><a href="http://www.51cto.com" target="_blank" title="中国领先的IT技术网站">51CTO.COM</a></li>
+<li><a href="http://www.cioage.com" target="_blank" title="中国首个专门服务于CIO的专业网站">CIOage.com</a></li>
+<li><a href="http://www.watchstor.com/" target="_blank"  title="领先的中文存储网络媒体">WatchStor.com</a></li>
+<li><a href="http://www.hc3i.cn/" target="_blank"  title="中国首家专注于数字医疗及医疗信息化的专业网站">HC3i.cn</a></li>
+</ul>
+</div>
+<script src="http://www.51cto.com/js/jquery-1.8.3.min.js"></script>
+<script>
+$(function(){
+	$(".bann").height(265);	 
+	$(".bann").css("background-color","white");
+});
+
+</script>
+
+<script src="http://www.51cto.com/head_art_more1.js"></script>
+<!-- 登陆信息 -->
+<!-- 导航 结束--> 
+ <div class="g_39 mb10">
+	<div id="tonglanad" class="fl"></div>
+	<div id="list4" class="fr">
+		<ul>
+			<li id="wordlinkad1"></li>
+			<li id="wordlinkad2"></li>
+			<li id="wordlinkad3"></li>
+			<li id="wordlinkad4"></li>
+		</ul>
+	</div>
+<br class="dle"/>
+</div>
+
+<div class="g_39 menu">
+<div class="subNav_logo"><img src="http://www.51cto.com/images/sunbanner/dushu_logo.gif" /></div>
+  <div class="subNav_l"><A href="http://book.51cto.com/" target=_blank>首页</A> | <A href="http://www.51cto.com/col/1198/" target=_blank>网络</A> | <A href="http://www.51cto.com/col/1203/" target=_blank>安全</A> | <A href="http://www.51cto.com/col/1210/" target=_blank>系统</A> | <A href="http://www.51cto.com/col/1216/" target=_blank>数据库</A> | <A href="http://www.51cto.com/col/1221/" target=_blank>开发</A> | <A href="http://www.51cto.com/col/1232/" target=_blank>Web应用</A> | <A href="http://www.51cto.com/col/1235/" target=_blank>考试认证</A> | <A href="http://www.51cto.com/col/1260/" target=_blank>职场</A> | <A href="http://www.51cto.com/col/1259/" target=_blank>管理</A> | <A href="http://publish.51cto.com/list/1192/" target=_blank>全部文章</A></div>  
+<div class="search fr">
+<dl>
+<form name=searchform action="http://www.51cto.com/php/search.php" target="_blank" method=post style="margin:0px; padding:0px;">
+<dt class="fl"><input name="keyword" type="text" class="searchInput f14 input" value="请输入关键字" onfocus="doempty(this, '请输入关键字');" onblur="doempty(this, '请输入关键字');" /></dt>
+<dd class="fl"><input type="image" src="http://images.51cto.com/images/art/newart1012/images/search.gif" /></dd></form>
+</dl>
+</div>
+<br class="dle"/>
+</div>
+<div class="g_39 b3-s-4273B3 rel">
+<!--width : 26*25 - 15 = 635px-->
+<div class="g_26 fl m_l">
+<div class="brief bgF8F8F8">
+<p class="crumb ">您所在的位置：<a href='http://book.51cto.com'>读书频道</a> &gt; <a href='http://book.51cto.com/col/1221/'>设计开发</a> &gt; <a href='http://book.51cto.com/col/1223/'>Java系列</a> &gt;  <b>14.1.3  磁场传感器Magnetic Field</b> </p>
+<h1>14.1.3  磁场传感器Magnetic Field</h1>
+<div class="msg">
+<div>2010-10-29 12:27  吴亚峰/索依娜  电子工业出版社 <span class="f12-a"><a href="#commment" target="_self"></a></span> 字号：<span class="f14-b"><a href="javascript:setfont(12);" target="_self">T</a></span> | <span class="f16-b"><a href="javascript:setfont(16);" target="_self">T</a></span></div>
+<div class='artHd' id='books' style='padding:5px 25px;'></div>
+<div class="fav"><a href="javascript:favorBox('open');" title="一键收藏，随时查看，分享好友！" target="_self"><img src="http://images.51cto.com/images/art/newart1012/images/Fav.gif" alt="一键收藏，随时查看，分享好友！" border="0" /></a></div>
+</div>
+<div class="brieftext">
+<p class="f14 green">《Android核心技术与实例详解》第14章传感器应用的开发，本章将详细介绍各种传感器的原理及使用方法，并通过一个水平仪的开发向读者介绍传感器应用的开发方法，以及如何在模拟器中模拟各种传感器。本节为大家介绍磁场传感器Magnetic Field。</p>
+<p class="ad">AD：<script src="http://www.51cto.com/js/article/keywords_ad_new.js"></script>
+</p>
+</div>
+</div>
+<div class="tag bgF8F8F8" id="indexlist" style="display:none;">
+<ul id="indexliststr">
+</ul>
+<br class="dle"/>
+</div>
+<div class="content bgF8F8F8 f14">
+<div id="content">
+<p><p><STRONG>14.1.3&nbsp; 磁场传感器Magnetic Field</STRONG></p>
+<p>本节继续介绍Android平台的另一个传感器--磁场传感器，该传感器主要读取的是磁场的变化，通过该传感器便可开发出指南针、罗盘等磁场应用。</p>
+<p>该传感器读取的数据同样是空间坐标系三个方向的磁场值，其数据单位为uT，即微特斯拉。接下来通过对之前姿态传感器案例的更改，来完成磁场数据的读取，步骤如下。</p>
+<p>新建一个Android项目，取名为Samples_14_3。</p>
+<p>准备字符串资源，用下列代码替换strings.xml中原有的代码。</p><PRE><OL class=dp-xml><LI class=alt><SPAN><SPAN>1&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><?</SPAN><SPAN class=tag-name>xml</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>version</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"1.0"</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>encoding</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"utf-8"</SPAN><SPAN class=tag>?></SPAN><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></SPAN><SPAN class=comments><!--&nbsp;声明XML的版本及编码格式&nbsp;--></SPAN><SPAN>&nbsp;</SPAN></SPAN><LI><SPAN>2&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>resources</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;</SPAN><LI class=alt><SPAN>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"hello"</SPAN><SPAN class=tag>></SPAN><SPAN>Hello&nbsp;World,&nbsp;<br>Sample_14_3!</SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;</SPAN><SPAN class=comments><!--&nbsp;定义hello字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI><SPAN>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"app_name"</SPAN><SPAN class=tag>></SPAN><SPAN>Sample_14_3</SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;&nbsp;<br></SPAN><SPAN class=comments><!--&nbsp;定义app_name字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI class=alt><SPAN>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"title"</SPAN><SPAN class=tag>></SPAN><SPAN>磁场传感器案例</SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;&nbsp;<br></SPAN><SPAN class=comments><!--&nbsp;定义title字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI><SPAN>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"myTextView1"</SPAN><SPAN class=tag>></SPAN><SPAN>x方向的磁场分量为：<br></SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=comments><!--&nbsp;定义myTextView1字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI class=alt><SPAN>7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"myTextView2"</SPAN><SPAN class=tag>></SPAN><SPAN>y方向的磁场分量为：<br></SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=comments><!--&nbsp;定义myTextView2字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI><SPAN>8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag><</SPAN><SPAN class=tag-name>string</SPAN><SPAN>&nbsp;</SPAN><SPAN class=attribute>name</SPAN><SPAN>=</SPAN><SPAN class=attribute-value>"myTextView3"</SPAN><SPAN class=tag>></SPAN><SPAN>z方向的磁场分量为：<br></SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>string</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=comments><!--&nbsp;定义myTextView3字符串&nbsp;--></SPAN><SPAN>&nbsp;</SPAN><LI class=alt><SPAN>9&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=tag></</SPAN><SPAN class=tag-name>resources</SPAN><SPAN class=tag>></SPAN><SPAN>&nbsp;</SPAN></LI></OL></PRE>
+<p>代码位置：见随书光盘中源代码/第14章/Sample_14_3/res/values目录下的strings.xml。</p>
+<p>说明：定义需要的字符串资源。</p>
+<p>搭建界面。本案例的main.xml与加速度案例中的完全相同，读者可将其复制过来。</p>
+<p>添加网络权限。与前面案例相同，在此不再赘述。</p>
+<p>开发主逻辑。将加速度案例的Sample_14_1.java的代码复制到本案例的Sample_14_ 3.java文件内，将监听器类的对象与注册监听的方法改为如下代码。</p><PRE><OL class=dp-xml><LI class=alt><SPAN><SPAN>1&nbsp;&nbsp;&nbsp;private&nbsp;SensorListener&nbsp;</SPAN><SPAN class=attribute>mySensorListener</SPAN><SPAN>&nbsp;=&nbsp;</SPAN><SPAN class=attribute-value>new</SPAN><SPAN>&nbsp;<br>SensorListener(){ &nbsp;</SPAN></SPAN><LI><SPAN>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override &nbsp;</SPAN><LI class=alt><SPAN>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onAccuracyChanged(int&nbsp;sensor,&nbsp;<br>int&nbsp;accuracy)&nbsp;{}&nbsp;&nbsp;//重写onAccuracyChanged方法 &nbsp;</SPAN><LI><SPAN>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override &nbsp;</SPAN><LI class=alt><SPAN>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onSensorChanged(int&nbsp;sensor,&nbsp;<br>float[]&nbsp;values)&nbsp;{&nbsp;&nbsp;&nbsp;//重写onSensorChanged方法 &nbsp;</SPAN><LI><SPAN>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(</SPAN><SPAN class=attribute>sensor</SPAN><SPAN>&nbsp;==&nbsp;SensorManager<br>.SENSOR_MAGNETIC_FIELD){&nbsp;&nbsp;//只检查磁场的变化 &nbsp;</SPAN><LI class=alt><SPAN>7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myTextView1.setText("x方向的磁场分量为：<br>"+values[0]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//将数据显示到TextView &nbsp;</SPAN><LI><SPAN>8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myTextView2.setText("y方向的磁场分量为：<br>"+values[1]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//将数据显示到TextView &nbsp;</SPAN><LI class=alt><SPAN>9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myTextView3.setText("z方向的磁场分量为：<br>"+values[2]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//将数据显示到TextView &nbsp;</SPAN><LI><SPAN>10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</SPAN><LI class=alt><SPAN>11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</SPAN><LI><SPAN>12&nbsp;&nbsp;}; &nbsp;</SPAN><LI class=alt><SPAN>13&nbsp;&nbsp;@Override &nbsp;</SPAN><LI><SPAN>14&nbsp;&nbsp;protected&nbsp;void&nbsp;onResume()&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//重写的onResume方法 &nbsp;</SPAN><LI class=alt><SPAN>15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mySensorManager.registerListener(//注册监听 &nbsp;</SPAN><LI><SPAN>16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mySensorListener,&nbsp;&nbsp;&nbsp;//监听器SensorListener对象 &nbsp;</SPAN><LI class=alt><SPAN>17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SensorManager.SENSOR_MAGNETIC_FIELD,&nbsp;<br>//传感器的类型为读取 &nbsp;</SPAN><LI><SPAN>18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SensorManager.SENSOR_DELAY_UI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//频率 &nbsp;</SPAN><LI class=alt><SPAN>19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;); &nbsp;</SPAN><LI><SPAN>20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super.onResume(); &nbsp;</SPAN><LI class=alt><SPAN>21&nbsp;&nbsp;}&nbsp;</SPAN></LI></OL></PRE>
+<p>说明：该段代码与前面案例不同的是第6行检查的磁场的变化，然后将三个方向上的分量分别显示到TextView中，而在注册监听时，同样将那个传感器的类型设置为SENSOR_MAGNETIC_FIELD表示只读取磁场值。</p>
+<p>运行sensorsimulator工具，选中magnetic field使得该工具模拟磁场的变化，然后运行该案例，将观察到如图14-12所示的效果。<br></p>
+<TABLE class=ln cellSpacing=0 borderColorDark=#ffffff align=center bgColor=#ddddd borderColorLight=#999999 border=1>
+<TBODY>
+<TR>
+<TD bgColor=#ffffff><A href="http://images.51cto.com/files/uploadimg/20101029/1229480.jpg" target=_blank><IMG  class='fit-image' onload='javascript:if(this.width>498)this.width=498;' onmousewheel = 'javascript:return big(this)' height=143 alt="" src="http://images.51cto.com/files/uploadimg/20101029/1229480.jpg" width=232 border=0></A>&nbsp;<A href="http://images.51cto.com/files/uploadimg/20060921/153223104.gif" target=_blank></A></TD></TR>
+<TR></TR></TBODY></TABLE><DIV align=right>【责任编辑：<A class=ln href="mailto:limian@51cto.com">云霞</A> TEL：（010）68476606】</DIV>  <br><table align='center'><tr><td><a href='http://book.51cto.com/art/201010/231837.htm'><b>回书目</b></a>&nbsp;&nbsp;&nbsp;<a href='http://book.51cto.com/art/201010/231873.htm' target='_self'><b>上一节</b></a>&nbsp;&nbsp;&nbsp;<a href='http://book.51cto.com/art/201010/231900.htm' target='_self'><b>下一节</b></a>  </td></tr></table>
+ 
+<p class="blank10"></p> 
+ 
+ 
+
+
+<div class="f12"> <span class="fl">原文：<a href="http://book.51cto.com/art/201010/231899.htm" class="blue"><b>14.1.3  磁场传感器Magnetic Field</b></a></span> <span class="fr"><a href="http://book.51cto.com">返回读书频道首页</a></span> </div>
+<p class="blank1"></p>
+</div>
+<script type="text/javascript">
+/*主站文章页600*60，创建于2013-9-23*/
+var cpro_id = "u1372942";
+</script> <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+<iframe width="600" scrolling="no" height="239" frameborder="0" src="http://widget.weibo.com/relationship/bulkfollow.php?language=zh_cn&amp;uids=1708729084,1706976420,1422974343,1819424293,1653470065,1807469867&amp;wide=0&amp;color=C2D9F2,FFFFFF,0082CB,666666&amp;showtitle=1&amp;showinfo=1&amp;sense=0&amp;verified=1&amp;count=6&amp;refer='+encodeURIComponent(location.href)+'&amp;dpc=1"></iframe>
+<div class="tips">
+<div style="float:left;">
+<span style="float:left; margin-top:4px;">分享到：</span>
+<!-- Baidu Button BEGIN -->
+    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="margin-right:5px; float:left;">
+        <a class="bds_qzone"></a>
+        <a class="bds_tsina"></a>
+        <a class="bds_tqq"></a>
+        <a class="bds_renren"></a>
+        <a class="bds_t163"></a>
+        <span class="bds_more"></span>
+		<a class="shareCount"></a>
+
+</div>
+<!--<div class="fl"> 
+    </div>
+--><script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=585532" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+	var bds_config = {'snsKey':{'tsina':'2378297317'}};
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+
+
+
+</div><div class="fr blue"><a href="javascript:AddFavorite(document.location.href,document.title);" target="_self">收藏</a>|<a href="javascript:window.print();" target="_self">打印</a>|<a id="msnqqcopy" title="分享本资源给好友" target="_self">复制</a></div>
+</div>
+</div>
+<!--内容 end-->
+<div class="topbiaoqing">
+<div class="biaoqing fixfloat pad" >
+<ul>
+<li><a href='javascript:getcountscom(231899,1)' target="_self"><img src="http://images.51cto.com/images/art1105/images/bq1.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,1)' target="_self">给力</a></div>
+<span id="231899_1">(0票)</span></li>
+<li><a href='javascript:getcountscom(231899,2)'  target="_self"><img src="http://images.51cto.com/images/art1105/images/bq2.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,2)'  target="_self">动心</a></div>
+<span id="231899_2">(0票)</span></li>
+<li><a href='javascript:getcountscom(231899,3)'  target="_self"><img src="http://images.51cto.com/images/art1105/images/bq3.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,3)'  target="_self">废话</a></div>
+<span id="231899_3">(0票)</span></li>
+<li><a href='javascript:getcountscom(231899,4)'  target="_self"><img src="http://images.51cto.com/images/art1105/images/bq4.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,4)'  target="_self">专业</a></div>
+<span id="231899_4">(0票)</span></li>
+<li><a href='javascript:getcountscom(231899,5)'  target="_self"><img src="http://images.51cto.com/images/art1105/images/bq5.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,5)'  target="_self">标题党</a></div>
+<span id="231899_5">(0票)</span></li>
+<li><a href='javascript:getcountscom(231899,6)'  target="_self"><img src="http://images.51cto.com/images/art1105/images/bq6.jpg" /></a>
+<div><a href='javascript:getcountscom(231899,6)'  target="_self">路过</a></div>
+<span id="231899_6">(0票)</span></li>
+</ul>
+</div>
+<script language="javascript"> 
+getcountscom(231899,11);
+
+</script>
+</div>
+<p class="blank10"></p>
+<!--reltag end-->
+
+<p class="blank10"></p>
+<div class="uyan">
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1609262"></script>
+</div>
+<!--box end-->
+
+<div class="bor">
+<div class="titbg pl15">关于<a href='http://www.51cto.com/php/search.php?keyword=Android' target='_blank' class='underline'>Android</a>&nbsp;&nbsp;<a href='http://www.51cto.com/php/search.php?keyword=Android%BA%CB%D0%C4%BC%BC%CA%F5%D3%EB%CA%B5%C0%FD%CF%EA%BD%E2' target='_blank' class='underline'>Android核心技术与实例详解</a>的更多文章</div>
+<div class="reltag">
+<ul class="fl list02">
+  <li><a href="http://book.51cto.com/art/201311/416344.htm" title="Android应用UI设计模式">Android应用UI设计模式</a></li><li><a href="http://book.51cto.com/art/201311/416370.htm" title="2.5　大局着眼，小处着手（2）">2.5　大局着眼，小处着手（2）</a></li><li><a href="http://book.51cto.com/art/201311/416369.htm" title="2.5　大局着眼，小处着手（1）">2.5　大局着眼，小处着手（1）</a></li><li><a href="http://book.51cto.com/art/201311/416368.htm" title="2.4　摆脱空间限制">2.4　摆脱空间限制</a></li><li><a href="http://book.51cto.com/art/201311/416367.htm" title="2.3　适合各种设备">2.3　适合各种设备</a></li>
+</ul>
+<div class="fr">
+<div class="h5 f12"><a href="http://mobile.51cto.com/android-416509.htm" title="Android 开发工具类大集合"><b>Android 开发工具类大集合</b></a></div>
+<a href="http://mobile.51cto.com/android-416509.htm" title="Android 开发工具类大集合"><img src="http://s6.51cto.com/wyfs01/M02/32/64/wKioOVJ_e8_zC6wwAAA0rC_CPi0073.png" alt="Android 开发工具类大集合" width="100" height="80" border="0" /></a>
+<p class="c666">在诸多移动操作系统中，Android的成长性无疑是最强的。Android以<a class="blue"href="http://mobile.51cto.com/android-416509.htm" title="Android 开发工具类大集合">[详细]</a></p>
+</div>
+</div></div>
+
+<p class="blank10"></p>
+
+
+
+<div class="relart fl bor">
+<div class="titbg">
+<h3 class="fl t1">栏目热门</h3>
+<a href="/click/1223" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+  
+	  <li><a href="http://book.51cto.com/art/201311/416161.htm" title="Java核心技术 卷I 基础知识（原书第9版）">Java核心技术 卷I 基础知识（原书第9版）</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201311/416398.htm" title="用AngularJS开发下一代Web应用">用AngularJS开发下一代Web应用</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201311/416327.htm" title="3.10.7   不规则数组">3.10.7   不规则数组</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201311/416172.htm" title="1.2.2   面向对象">1.2.2   面向对象</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201311/416321.htm" title="3.10.2   数组初始化以及匿名数组">3.10.2   数组初始化以及匿名数组</a></li>
+	  
+</ul>
+</div>
+<div class="cathot fr bor">
+<div class="titbg">
+<h3 class="fl t1">同期最新</h3>
+<a href="/col/1223" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+	
+	  <li><a href="http://book.51cto.com/art/201010/231873.htm" title="14.1.2  姿态传感器Orientation（2）">14.1.2  姿态传感器Orientation（2）</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201010/231872.htm" title="14.1.2  姿态传感器Orientation（1）">14.1.2  姿态传感器Orientation（1）</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201010/231870.htm" title="14.1.1  加速度传感器Accelerometer（3）">14.1.1  加速度传感器Accelerometer（3）</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201010/231867.htm" title="14.1.1  加速度传感器Accelerometer（2）">14.1.1  加速度传感器Accelerometer（2）</a></li>
+	  
+	  <li><a href="http://book.51cto.com/art/201010/231866.htm" title="14.1.1  加速度传感器Accelerometer（1）">14.1.1  加速度传感器Accelerometer（1）</a></li>
+	  
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1"><a href="http://book.51cto.com">读书频道</a></h3>
+<span class="pl10">频道导航</span></div>
+ <UL class=xtlist>
+<LI><SPAN class=tit>网络维护</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1199/">网络管理</A>|<A href="http://book.51cto.com/col/1200/">布线</A>|<A href="http://book.51cto.com/col/1201/">网络协议</A>|<A href="http://book.51cto.com/col/1211/">服务器与存储</A>|<A href="http://book.51cto.com/col/1202/">Cisco</A>|</DIV></LI>
+<LI><SPAN class=tit>安全</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1208/">网络安全</A>|<A href="http://book.51cto.com/col/1207/">数据安全</A>|<A href="http://book.51cto.com/col/1205/">病毒</A>|<A href="http://book.51cto.com/col/1204/">综合</A></DIV></LI>
+<LI><SPAN class=tit>操作系统</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1213">Linux</A>|<A href="http://book.51cto.com/col/1212">Windows</A>|<A href="http://book.51cto.com/col/1214">Unix</A>|<A href="http://book.51cto.com/col/1215">其他</A></DIV></LI>
+<LI><SPAN class=tit>数据库</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1217/">Oracle</A>|<A href="http://book.51cto.com/col/1218/">SQL Server</A>|<A href="http://book.51cto.com/col/1219/">MySQL</A>|<A href="http://book.51cto.com/col/1220/">综合</A></DIV></LI>
+<LI><SPAN class=tit>设计开发</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1222">.Net系列</A>|<A href="http://book.51cto.com/col/1223">Java系列</A>|<A href="http://book.51cto.com/col/1224">C++</A>|<A href="http://book.51cto.com/col/1225">数据库开发</A>|<A href="http://book.51cto.com/col/1226">网站开发|<A href="http://book.51cto.com/col/1227">其他开发|<A href="http://book.51cto.com/col/1228">软件工程</A></DIV></LI>
+<LI><SPAN class=tit>网络应用</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1232/">Web应用</A>|<A href="http://book.51cto.com/col/1234/">ERP/BI</A>|<A href="http://book.51cto.com/col/1231/">Office</A></DIV></LI>
+<LI><SPAN class=tit>考试认证</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1236/">综合</A>|<A href="http://book.51cto.com/col/1237/">软考</A>|<A href="http://book.51cto.com/col/1238/">网工</A>|<A href="http://book.51cto.com/col/1240/">等考</A></DIV></LI>
+<LI class=last><SPAN class=tit>管理生活</SPAN> 
+<DIV><A href="http://book.51cto.com/col/1259/">企业管理</A>|<A href="http://book.51cto.com/col/1260/">技术职场</A></DIV></LI></UL> 
+</div> 
+<p class="blank10"></p>
+<DIV class=leftbotcon>
+<DIV class="bor jdlist">
+<DIV class=titbg>
+<H3 class=t2>热点推荐</H3></DIV>
+<UL>
+<LI><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://mobile.51cto.com/mobile-182392.htm"><IMG src="http://images.51cto.com/files/uploadimg/20100202/153546162.jpg"></A> 
+<DIV class=name><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://mobile.51cto.com/mobile-182392.htm">Android开发应用详解</A></DIV></LI>
+<LI><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://developer.51cto.com/art/201106/266369.htm"><IMG src="http://images.51cto.com/files/uploadimg/20110608/133620622.jpg"></A> 
+<DIV class=name><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-t-4']);" href="http://developer.51cto.com/art/201106/266369.htm">那些性感的让人尖叫的程序员</A></DIV></LI>
+<LI><A href="http://developer.51cto.com/art/200907/133407.htm"><IMG src="http://images.51cto.com/files/uploadimg/20090702/134217922.jpg"></A> 
+<DIV class=name><A href="http://developer.51cto.com/art/200907/133407.htm">HTML5 下一代Web开发标准详解</A></DIV></LI>
+<LI><A href="http://developer.51cto.com/art/201104/257581.htm"><IMG src="http://images.51cto.com/files/uploadimg/20110426/123123954.jpg"></A> 
+<DIV class=name><A href="http://developer.51cto.com/art/201104/257581.htm">高性能WEB开发应用指南</A></DIV></LI>
+<LI><A href="http://os.51cto.com/art/200706/49181.htm"><IMG src="http://images.51cto.com/files/uploadimg/20070613/195816929.jpg"></A> 
+<DIV class=name><A href="http://os.51cto.com/art/200706/49181.htm">Ubuntu开源技术交流频道</A></DIV></LI></UL></DIV>
+<P class=blank10></P>
+<DIV class="bor hotTag"><STRONG>热门标签：</STRONG> <A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-2]);" href="http://os.51cto.com/windows/">windows频道</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://mobile.51cto.com/">移动开发</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://cloud.51cto.com/">云计算</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://mobile.51cto.com/mobile/objc/">objective-c</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://network.51cto.com/art/200909/151122.htm">tp-link路由器设置图解</A><A onclick="javascript: _gaq.push(['_trackPageview', '/51cto/neirong/d-w']);" href="http://developer.51cto.com/art/200907/133407.htm">html5</A> </DIV></DIV>
+<div class="leftbotbox"> </div>
+</div>
+<!--left end-->
+<div class="g_13 fr">
+<div class="focus fixfloat"> 
+ <img width="298" style="border: 1px solid #CCCCCC; margin:5px 0px 5px;" src="http://www.51cto.com/images/weixin.png"><div class="hot">
+<ul>
+<li class="tit"><em>热点</em> <a href="http://book.51cto.com/art/201110/298391.htm">黑客：计算机革命的英雄</a> </li>
+<li class="con"><dl><dt><a href="http://book.51cto.com/art/201110/298391.htm"><img border="0" src="http://images.51cto.com/files/uploadimg/20111107/105906683.jpg"/></a></dt>
+<dd>本书描述了黑客用默默无闻的行动为数字世界照亮了一条道路的故事。 </dd>
+</dl></li></ul><ol class="hotlist"><li><a href="http://book.51cto.com/art/201108/282390.htm">Linux服务器配置全程实录</a></li><li><a href="http://book.51cto.com/art/201107/278179.htm">揭秘--优秀PPT这样制作</a></li></ol></div>
+<p id="hzh_one">
+<script language="JavaScript" src="http://www.51cto.com/ad/art/hzh/ad.js" type="text/javascript"></script>
+</p>
+</div>
+<div class="rank">
+<div class="tlt">
+      <h3>文章排行</h3>
+      <a onmouseover="change_top10(3);" id="top_3">本月</a><a onmouseover="change_top10(2);" id="top_2">本周</a><a onmouseover="change_top10(1);" class="myon" id="top_1">24小时</a> </div>
+ <div id="top10_1" style="display: block;" class="list"><ul>
+<li><a href="http://book.51cto.com/art/201404/434977.htm" target="_blank" title="大数据时代的IT架构设计">大数据时代的IT架构设计</a>
+<li><a href="http://book.51cto.com/art/201109/293514.htm" target="_blank" title="悟道：一位IT高管20年的职场心经">悟道：一位IT高管20年的职场心经</a>
+<li><a href="http://book.51cto.com/art/201404/435363.htm" target="_blank" title="PHP+MySQL+Dreamweaver动态网站建设从">PHP+MySQL+Dreamweaver动态网站建设从</a>
+<li><a href="http://book.51cto.com/art/201110/298391.htm" target="_blank" title="黑客">黑客</a>
+<li><a href="http://book.51cto.com/art/201403/433896.htm" target="_blank" title="程序员的数学思维修炼">程序员的数学思维修炼</a>
+<li><a href="http://book.51cto.com/art/201007/211888.htm" target="_blank" title="鸟哥的Linux私房菜 基础学习篇（第三版">鸟哥的Linux私房菜 基础学习篇（第三版</a>
+<li><a href="http://book.51cto.com/art/201403/434186.htm" target="_blank" title="大话重构">大话重构</a>
+<li><a href="http://book.51cto.com/art/201404/435879.htm" target="_blank" title="jQuery应用开发实践指南">jQuery应用开发实践指南</a>
+<li><a href="http://book.51cto.com/art/200704/46276.htm" target="_blank" title="网络工程师必读——网络工程基础">网络工程师必读——网络工程基础</a>
+<li><a href="http://book.51cto.com/art/201404/435920.htm" target="_blank" title="JavaScript性能优化：度量、监控与可视">JavaScript性能优化：度量、监控与可视</a>
+</ul></div>
+<div id="top10_2" style="display: none;" class="list"><ul>
+<li><a href="http://book.51cto.com/art/201404/435879.htm" target="_blank" title="jQuery应用开发实践指南">jQuery应用开发实践指南</a>
+<li><a href="http://book.51cto.com/art/201404/435920.htm" target="_blank" title="JavaScript性能优化：度量、监控与可视">JavaScript性能优化：度量、监控与可视</a>
+<li><a href="http://book.51cto.com/art/201404/436132.htm" target="_blank" title="机器学习实践指南：案例应用解析">机器学习实践指南：案例应用解析</a>
+<li><a href="http://book.51cto.com/art/201404/435998.htm" target="_blank" title="刻板印象：我们为什么那样看别人，这样">刻板印象：我们为什么那样看别人，这样</a>
+<li><a href="http://book.51cto.com/art/201404/436104.htm" target="_blank" title="微信公众平台开发最佳实践">微信公众平台开发最佳实践</a>
+<li><a href="http://book.51cto.com/art/201404/436161.htm" target="_blank" title="Backbone.js实战">Backbone.js实战</a>
+<li><a href="http://book.51cto.com/art/201404/436086.htm" target="_blank" title="图解HTTP">图解HTTP</a>
+<li><a href="http://book.51cto.com/art/201404/436038.htm" target="_blank" title="左手领导力，右手影响力：世界500强企">左手领导力，右手影响力：世界500强企</a>
+<li><a href="http://book.51cto.com/art/201404/436229.htm" target="_blank" title="Node.js实战">Node.js实战</a>
+<li><a href="http://book.51cto.com/art/201404/436024.htm" target="_blank" title="招才选将">招才选将</a>
+</ul></div>
+<div id="top10_3" style="display: none;" class="list"><ul>
+<li><a href="http://book.51cto.com/art/201403/433896.htm" target="_blank" title="程序员的数学思维修炼">程序员的数学思维修炼</a>
+<li><a href="http://book.51cto.com/art/201404/434986.htm" target="_blank" title="互联网思维到底是什么--移动浪潮下的新">互联网思维到底是什么--移动浪潮下的新</a>
+<li><a href="http://book.51cto.com/art/201404/434999.htm" target="_blank" title="价值百万的PPT是如何炼成的（全彩）">价值百万的PPT是如何炼成的（全彩）</a>
+<li><a href="http://book.51cto.com/art/201403/434186.htm" target="_blank" title="大话重构">大话重构</a>
+<li><a href="http://book.51cto.com/art/201403/433786.htm" target="_blank" title="安全软件开发之道：构筑软件安全的本质">安全软件开发之道：构筑软件安全的本质</a>
+<li><a href="http://book.51cto.com/art/201404/435363.htm" target="_blank" title="PHP+MySQL+Dreamweaver动态网站建设从">PHP+MySQL+Dreamweaver动态网站建设从</a>
+<li><a href="http://book.51cto.com/art/201403/434024.htm" target="_blank" title="Java核心技术卷II 高级特性（原书第9版">Java核心技术卷II 高级特性（原书第9版</a>
+<li><a href="http://book.51cto.com/art/201404/435879.htm" target="_blank" title="jQuery应用开发实践指南">jQuery应用开发实践指南</a>
+<li><a href="http://book.51cto.com/art/201404/434840.htm" target="_blank" title="Web性能权威指南">Web性能权威指南</a>
+<li><a href="http://book.51cto.com/art/201404/435920.htm" target="_blank" title="JavaScript性能优化：度量、监控与可视">JavaScript性能优化：度量、监控与可视</a>
+</ul></div>
+ 
+ </div>
+<p class="blank1"></p>
+
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点专题</h3>
+<a href="http://book.51cto.com/speclist/1223" class="tmore">更多&gt;&gt;</a></div>
+<ul class="plist01">
+<li><a href="http://book.51cto.com/art/201311/415287.htm" title="Python编程入门（第3版）"><img src="http://s7.51cto.com/wyfs01/M02/31/E9/wKioJlJzjTDQv9YUAAAqhuIEcys003.gif" alt="Python编程入门（第3版）" width="100" height="80" /></a>
+<h5><a href="http://book.51cto.com/art/201311/415287.htm" title="Python编程入门（第3版）">Python编程入门（第3</a></h5>
+<div class="c666">本书是图文并茂的Python学习参考书，书中并不包含深奥</div>
+</li><li><a href="http://book.51cto.com/art/201311/415262.htm" title="常用算法深入学习实录"><img src="http://s8.51cto.com/wyfs01/M01/31/E9/wKioJlJzfznQ0j63AAAXP65RAaQ275.gif" alt="常用算法深入学习实录" width="100" height="80" /></a>
+<h5><a href="http://book.51cto.com/art/201311/415262.htm" title="常用算法深入学习实录">常用算法深入学习实录</a></h5>
+<div class="c666">对于任何一门编程语言来说，算法都是程序的"灵魂"。正</div>
+</li><li><a href="http://book.51cto.com/art/201311/415203.htm" title="HTML5+CSS+JavaScript深入学习实录"><img src="http://s8.51cto.com/wyfs01/M01/31/C6/wKioOVJzWvnCDbP4AAAYTnT4ovI678.gif" alt="HTML5+CSS+JavaScript深入学习实录" width="100" height="80" /></a>
+<h5><a href="http://book.51cto.com/art/201311/415203.htm" title="HTML5+CSS+JavaScript深入学习实录">HTML5+CSS+JavaScript</a></h5>
+<div class="c666">HTML 语言是当今网页设计的主流表现语言，CSS 是当今</div>
+</li> 
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tagCloud">
+<div class="tlt">
+<h3>热点标签</h3>
+</div>
+<div class="taglist"><A title=网络管理 href="http://book.51cto.com/col/1199/">网络管理</A> <A title=Windows href="http://book.51cto.com/col/1212/">Windows</A> <A title=Linux href="http://book.51cto.com/col/1213/">Linux</A> <A title="SQL Server" href="http://book.51cto.com/col/1218/">SQL Server</A> <A title=Oracle href="http://book.51cto.com/col/1217/">Oracle</A> <A class=imp title=Java系列 href="http://book.51cto.com/col/1223/">Java系列</A> <A title=软件工程 href="http://book.51cto.com/col/1228/">软件工程</A> <A title=.Net系列 href="http://book.51cto.com/col/1222/">.Net系列</A> <A title=Web开发 href="http://book.51cto.com/col/1226/">Web开发</A> <A title=技术职场 href="http://book.51cto.com/col/1260/">技术职场</A></div>
+</div>
+<div class="rss">
+<ul>
+<li class="lin f12-c"><a href="http://news.51cto.com/col/1323/"><strong>点击这里查看样刊</strong></a></li>
+<li>
+<dl>
+<dt> </dt>
+<dd><a href="http://home.51cto.com/index.php?s=/Subscribe"><img src="http://images.51cto.com/images/art0910/images/dingy.gif" /></a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">全站热点</h3>
+</div>
+<div class="webhot fixfloat">
+<ul>
+
+<li>
+  <a href="http://mobile.51cto.com/exp/Push2013/index.html"  title="云推送移动互联网的太极推手"><img src="http://s1.51cto.com/wyfs01/M00/11/0E/wKioOVHsxF-gUATqAAApioMlGJQ755.jpg" /></a>
+  <div><a href="http://mobile.51cto.com/exp/Push2013/index.html"  title="云推送移动互联网的太极推手">云推送移动互联网的太极推手</a></div>
+</li>
+
+<li>
+  <a href="http://netsecurity.51cto.com/secu/Fortinet/wlan_2013/"  title="无线畅游 无限安全"><img src="http://s8.51cto.com/wyfs01/M01/10/5B/wKioJlHmBOeC_FiEAAATlmOKLvc912.jpg" /></a>
+  <div><a href="http://netsecurity.51cto.com/secu/Fortinet/wlan_2013/"  title="无线畅游 无限安全">无线畅游 无限安全</a></div>
+</li>
+
+</ul>
+</div>
+<p class="blank1"></p>
+<ul class="list03">
+
+<li><a href="http://news.51cto.com/art/201310/414668.htm"  title="电商3.0：是战略而非战术">电商3.0：是战略而非战术</a></li>
+
+<li><a href="http://book.51cto.com/art/201310/414594.htm"  title="Visual Basic 2012入门经典（第7版）">Visual Basic 2012入门经典（第7版）</a></li>
+
+<li><a href="http://os.51cto.com/art/201310/414555.htm"  title="OS X Mavericks 欲与 Windows 8.1 试比高">OS X Mavericks 欲与 Windows 8.1 试</a></li>
+
+<li><a href="http://server.51cto.com/News-414541.htm"  title="践行开放融合之道 浪潮云海OS全新升级v3.0">践行开放融合之道 浪潮云海OS全新升</a></li>
+
+<li><a href="http://book.51cto.com/art/201310/414485.htm"  title="ASP.NET 4.5入门经典（第7版）">ASP.NET 4.5入门经典（第7版）</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">读书</h3>
+</div>
+  
+<div class="catbook"><a href="http://book.51cto.com/art/200707/50507.htm" title="开源osCommerce 轻松架设专业电子商务平台"><img src="http://images.51cto.com/files/uploadimg/20070705/110735700.gif" width="66" height="98" border="0" /></a>
+<h5><a href="http://book.51cto.com/art/200707/50507.htm">开源osCommerce 轻松架设专业电子商务平台</a></h5>
+<div class="c666 text">osCommerce是一款免费的、开放源代码的专业电子商务解决方案。本书以通俗易懂的语言向读者展示了该软件强大的功能和简易的操作方</div>
+</div>
+
+
+<ul class="list03">
+
+<li><a href="http://book.51cto.com/art/200704/46234.htm" title="PHP和MySQL Web开发(原书第3版)">PHP和MySQL Web开发(原书第3版)</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/46237.htm" title="Linux标准教程">Linux标准教程</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/46240.htm" title="XML基础教程">XML基础教程</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/46252.htm" title="JSP应用开发详解(第三版)">JSP应用开发详解(第三版)</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1 fl">博文推荐</h3>
+<a class="tmore" href="http://blog.51cto.com/">更多&gt;&gt;</a></div>
+
+<ul class="list03">
+ <li><a href="http://xiaofw.blog.51cto.com/50361/424469/" target="_blank" title="李彦宏的简单百度文化——  ——读《壹百度2》">李彦宏的简单百度文化——  ——读《</a></li><li><a href="http://cteam.blog.51cto.com/358485/424354/" target="_blank" title="再谈不要盲目追新追高">再谈不要盲目追新追高</a></li><li><a href="http://oecpby.blog.51cto.com/2203338/424351/" target="_blank" title="FreeMarker基本语法详解及模板文件的组成(一) ">FreeMarker基本语法详解及模板文件的</a></li><li><a href="http://wangchunhai.blog.51cto.com/225186/424331/" target="_blank" title="使用 vSphere CLI将VMware ESX Server 4.0升级到4.1">使用 vSphere CLI将VMware ESX Serve</a></li>
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tj">
+<div class="tlt">
+<h3>最新热帖</h3>
+<a class="more" href="http://bbs.51cto.com/hotthreads.php">更多&gt;&gt;</a></div>
+<ul>
+<li><a href="http://bbs.51cto.com/thread-26429-1.html" target="_blank" title="通用WAP网站生成系统(PowerDiamond) v.1">通用WAP网站生成系统(PowerDiamond) </a></li><li><a href="http://bbs.51cto.com/thread-11063-1.html" target="_blank" title="八类大学毕业生求职时不受欢迎">八类大学毕业生求职时不受欢迎</a></li><li><a href="http://bbs.51cto.com/thread-6946-1.html" target="_blank" title="IT人为什么难以拿到高薪？【转帖】">IT人为什么难以拿到高薪？【转帖】</a></li><li><a href="http://bbs.51cto.com/thread-4333-1.html" target="_blank" title="想去外企上班">想去外企上班</a></li>
+</ul>
+</div>
+<div class="picAD">
+<script language="JavaScript" src="http://www.51cto.com/ad/art/baidugoogle/ad.js" type="text/javascript"></script>
+</div>
+</div>
+<p class="blank1"></p> 
+<!--leftbotcon end-->
+</div> 
+<div class="subweb">
+<h4>51CTO旗下网站</h4>
+<div>
+<a target="_blank" href="http://www.51cto.com/">领先的IT技术网站 51CTO</a>
+<a target="_blank" href="http://www.watchstor.com/">领先的中文存储媒体 WatchStor</a>
+<a target="_blank" href="http://www.cioage.com/">中国首个CIO网站 CIOage</a>
+<a target="_blank" href="http://www.hc3i.cn/">中国首家数字医疗网站 HC3i</a>
+</div>
+</div>
+<div id="ft"><div id="foot" align="center"><script src="http://images.51cto.com/images/copy_right/copy_right.js"></script></div></div>
+<script src="http://logs.51cto.com/rizhi/count/count.js"></script>
+<!-- START GA.js -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20883758-1']);
+  _gaq.push(['_setDomainName', 'none']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_addOrganic', 'baidu', 'word']);
+  _gaq.push(['_addOrganic', 'google', 'q']);
+  _gaq.push(['_addOrganic', 'soso', 'w']);
+  _gaq.push(['_addOrganic', '3721', 'name']);
+  _gaq.push(['_addOrganic', 'yodao', 'q']);
+  _gaq.push(['_addOrganic', 'vnet', 'kw']);
+  _gaq.push(['_addOrganic', 'sogou', 'query']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageLoadTime']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- END GA.js -->
+
+<!-- baidu.js -->
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Ff77ea1ecd95cb2a1bc65cbcb3aaba7d4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<!--end baidu.js -->
+<script type="text/javascript">
+
+	$("#uyan_cmt_list").next().remove();	
+	$("#uyan_cmt_list").next().css("display","none");	
+</script>
+
+<!-- 新监测代码 -->
+<!-- 新监测代码 -->
+<div id="MyMoveAd" style="display:none">
+<span id="wordlink_1"><script src="http://www.51cto.com/ad/art/wordlink/wordlink1.js"></script></span>
+<span id="wordlink_2"><script src="http://www.51cto.com/ad/art/wordlink/wordlink2.js"></script></span>
+<span id="wordlink_3"><script src="http://www.51cto.com/ad/art/wordlink/wordlink3.js"></script></span>
+<span id="wordlink_4"><script src="http://www.51cto.com/ad/art/wordlink/wordlink4.js"></script></span>
+<span id="pinglun"><script language="JavaScript" src="http://www.51cto.com/php/getArtCount.php?artid=231899&type=all"></script></span>
+<span id="tonglan"><script language="JavaScript" src="http://www.51cto.com/ad/art/tonglan/ad.js"></script></span>
+<span id="wordlink"><script language="JavaScript" src="http://www.51cto.com/ad/art/wordlink/ad.js"></script></span>
+<script src="http://www.51cto.com/ad/art/wordlink/ad.js"></script>
+<span id="bookss"><script language="JavaScript" src="http://www.51cto.com/php/getBookData.php?artid=231837"></script></span>
+</div>   
+<script language="javascript" src="http://www.51cto.com/js/article/favorite.js"></script>
+
+<script language="javaScript" src="http://www.51cto.com/php/dialog_utf8.js"></SCRIPT>
+<script language="javaScript" src="http://www.51cto.com/mail.js"></script>  
+<script type="text/javascript" src="http://home.51cto.com/apps/favorite/Tpl/default/Public/js/favorbox.js"></script>
+<script language="javascript" src="http://images.51cto.com/images/art/newart1012/clipboard.js"></script>
+<script language="javaScript"> 
+	var thistid=231899; 
+	
+	//收藏按钮
+	var favor_url = 'http://book.51cto.com/art/201010/231899.htm';  // 如：http://bbs.51cto.com/thread-789649-1.html
+	var favor_title = '14.1.3  磁场传感器Magnetic Field';       //  
+	
+	//绑定复制按钮
+	copy('msnqqcopy', 'http://book.51cto.com/art/201010/231899.htm', '分享到MSN/QQ的链接复制成功!');
+//	copy('bbscopy', '[url=http://book.51cto.com/art/201010/231899.htm][u]14.1.3  磁场传感器Magnetic Field[/u][/url]', '分享到论坛的UBB代码复制成功!');
+
+</script> 
+<script src=" http://home.51cto.com/index.php?s=/Index/getLoginStatus/reback/http%253A%252F%252Fbook.51cto.com%252Fart%252F201010%252F231899.htm" charset='utf-8'></script>
+<script src="http://www.51cto.com/php/count.php?view=yes&artID=231899" language="javascript"></script>
+<script language="javascript">
+document.getElementById('books').innerHTML = document.getElementById("bookss").innerHTML; 
+</script>
+
+</body>
+</html>
